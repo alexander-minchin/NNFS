@@ -21,6 +21,13 @@ class Activation_Softmax:
         probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
         self.output = probabilities
 
+class Loss_Function:
+    def forward(self, inputs, targets):
+        one_hot = np.zeros(inputs.shape)
+        for i, target in enumerate(targets):
+            one_hot[i][target] = 1
+        loss = -np.log(inputs) * one_hot
+        self.output = loss
 
 # X - feature sets, y - targets/classifications
 X, y = spiral_data(samples=100, classes=3)
@@ -37,4 +44,8 @@ activation1.forward(dense1.output)
 dense2.forward(activation1.output)
 activation2.forward(dense2.output)
 
-print(activation2.output[:5])
+loss = Loss_Function()
+loss.forward(activation2.output,y)
+
+
+print(loss.output)
